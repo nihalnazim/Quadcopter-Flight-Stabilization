@@ -1,5 +1,7 @@
+import math
+
 class SafetySystem:
-    def __init__(self, max_angle=45.0):
+    def __init__(self, max_angle=math.radians(45.0)):
         self.max_angle = max_angle
         self.armed = False
 
@@ -17,3 +19,7 @@ class SafetySystem:
 
     def throttle_scale(self):
         return 1.0 if self.armed else 0.0
+    
+
+
+    

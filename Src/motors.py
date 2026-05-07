@@ -1,23 +1,24 @@
-def update_dynamics(theta, omega, m1, m2, m3, m4, dt):
+def update_dynamics(theta, omega, u, dt, disturbance=0.0):
     """
-    Very simplified drone pitch/roll dynamics.
-    """
-
-    # Simplified torque model
-    torque = (m1 + m3) - (m2 + m4)
-
-    # Constants (tunable)
-    inertia = 1.0
-    damping = 0.8
-    control_gain = 2.0
-
-    # Angular acceleration
-    omega_dot = (control_gain * torque - damping * omega) / inertia
-
-    # Update state
+    Simplified single-axis rotational dynamics:
     theta_dot = omega
+    omega_dot = (torque - damping * omega) / inertia
+    """
 
-    theta += theta_dot * dt
+    # Physical parameters
+    inertia = 1.0           # moment of inertia
+    damping = 0.8           # rotational damping coefficient
+
+    control_gain = 2.0      # control input treated as torque
+
+    # Total torque
+    torque = control_gain * u + disturbance
+
+    # Compute angular acceleration
+    omega_dot = (torque - damping * omega) / inertia
+
+    # Integrate state using Euler method
     omega += omega_dot * dt
+    theta += omega * dt
 
     return theta, omega

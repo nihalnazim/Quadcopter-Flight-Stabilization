@@ -12,9 +12,9 @@ def calibrate_gyro(attitude_state, imu, sample_count=500, dt=0.002):
     for _ in range(sample_count):
         ax, ay, az, gx, gy, gz = imu.read(theta=0.0, omega=0.0)
 
-        sum_x += gx
-        sum_y += gy
-        sum_z += gz
+        sum_x += gx / 65.5
+        sum_y += gy / 65.5
+        sum_z += gz / 65.5
 
     avg_x = sum_x / sample_count
     avg_y = sum_y / sample_count

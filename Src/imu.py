@@ -9,23 +9,33 @@ class IMUSimulator:
     def read(self, theta, omega):
         """
         Simulate IMU readings based on true state.
-        theta = angle (rad or deg depending on your system)
-        omega = angular velocity
+        theta: radians
+        omega: rad/s
         """
 
-        # Assume gravity vector for accel
+        # --- Accelerometer (gravity projection) ---
         ax = -np.sin(theta)
         ay = 0.0
         az = np.cos(theta)
 
-        # add noise
+        # Add noise (still in g's)
         ax += np.random.normal(0, self.accel_noise)
         ay += np.random.normal(0, self.accel_noise)
         az += np.random.normal(0, self.accel_noise)
 
-        gx = omega + np.random.normal(0, self.gyro_noise)
-        gy = 0.0 + np.random.normal(0, self.gyro_noise)
-        gz = 0.0 + np.random.normal(0, self.gyro_noise)
+        # Convert to raw IMU units
+        ax *= 8192.0
+        ay *= 8192.0
+        az *= 8192.0
 
-        # convert to "raw-like" values if needed
+        # --- Gyroscope ---
+        gx = np.degrees(omega) + np.random.normal(0, self.gyro_noise)
+        gy = np.random.normal(0, self.gyro_noise)
+        gz = np.random.normal(0, self.gyro_noise)
+
+        # Convert to raw IMU units
+        gx *= 65.5
+        gy *= 65.5
+        gz *= 65.5
+
         return ax, ay, az, gx, gy, gz
