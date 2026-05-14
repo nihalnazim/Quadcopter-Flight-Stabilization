@@ -60,6 +60,31 @@ def compute_control(ctrl, attitude, dt):
 
 
 def compute_single_axis_control(ctrl, attitude, dt):
+
+
+    """
+    Compute single-axis roll control input using PD control.
+
+    The controller attempts to drive roll angle toward the
+    desired setpoint while damping angular velocity.
+
+    Parameters
+    ----------
+    ctrl : ControlState
+        Controller configuration and gains.
+
+    attitude : AttitudeState
+        Current estimated system orientation.
+
+    dt : float
+        Simulation timestep.
+
+    Returns
+    -------
+    float
+        Clamped control input.
+    """
+    
     error = ctrl.setpoint_roll - attitude.roll
     rate = getattr(attitude, "roll_rate", 0.0)
 

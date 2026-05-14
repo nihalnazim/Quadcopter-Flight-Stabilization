@@ -1,3 +1,13 @@
+"""
+Single-axis quadcopter stabilization simulation.
+
+This project models roll stabilization using:
+- PD control
+- semi-implicit Euler integration
+- IMU sensor simulation
+- complementary filtering
+- disturbance rejection testing
+"""
 from src.attitude import AttitudeState
 from src.control import create_default_controller, compute_single_axis_control
 from src.safety import SafetySystem
@@ -9,6 +19,43 @@ import matplotlib.pyplot as plt
 
 
 def run_simulation(t_final=5.0, dt=1/250, use_imu=False):
+
+    """
+    Run the single-axis quadcopter roll stabilization simulation.
+
+    The simulation models rotational dynamics using semi-implicit
+    Euler integration and stabilizes roll angle using a PD controller.
+
+    Parameters
+    ----------
+    t_final : float
+        Total simulation duration in seconds.
+
+    dt : float
+        Simulation timestep in seconds.
+
+    use_imu : bool
+        If True, use simulated IMU measurements and complementary
+        filtering. If False, use direct state feedback.
+
+    Returns
+    -------
+    time_log : list
+        Simulation time values.
+
+    theta_log : list
+        True roll angle history.
+
+    measured_theta_log : list
+        Estimated/measured roll angle history.
+
+    omega_log : list
+        Angular velocity history.
+
+    motor_log : list
+        Control input history.
+    """
+        
     attitude = AttitudeState()
     controller = create_default_controller()
     safety = SafetySystem(max_angle=math.radians(45.0))
@@ -85,6 +132,26 @@ if __name__ == "__main__":
     print(f"Initial theta: {theta_log[0]}")
     print(f"Final theta: {theta_log[-1]}")
 
+    # --- Validation / sanity checks ---
+
+    max_theta = max(abs(theta) for theta in theta_log)
+    final_theta = abs(theta_log[-1])
+
+    print(f"Maximum |theta|: {max_theta:.6f} rad")
+    print(f"Final |theta|: {final_theta:.6f} rad")
+
+    # Ensure simulation stayed within safety bounds
+    assert max_theta < math.radians(45.0), (
+        "Safety limit exceeded during simulation."
+    )
+
+    # Ensure system settles near equilibrium
+    assert final_theta < 0.05, (
+        "System did not settle close enough to zero."
+    )
+
+    print("Validation checks passed.")
+
     plt.figure()
     plt.plot(time_log, theta_log, label="True theta")
     plt.plot(time_log, measured_theta_log, label="Measured theta", alpha=0.7)
@@ -104,7 +171,7 @@ if __name__ == "__main__":
     plt.figure()
     plt.plot(time_log, motor_log)
     plt.xlabel("Time (s)")
-    plt.ylabel("Control input u")
+    plt.ylabel("Control input u (arb. units)")
     plt.title("Control Input vs Time")
     plt.grid()
 

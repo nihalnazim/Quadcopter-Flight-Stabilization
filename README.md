@@ -140,6 +140,28 @@ python main.py
 ```
 
 ---
+---
+
+## Legacy Folder Notice
+
+The `Legacy/` folder contains older prototype implementations that were used during early development and testing.
+
+The active implementation for the final project is:
+
+- `main.py`
+- `src/`
+
+The legacy files are preserved for development history and comparison purposes, but they should not be used for running or evaluating the final simulation.
+
+## Python Version
+
+This project was developed and tested using:
+
+```text
+Python 3.11
+```
+
+Using the listed dependency versions is recommended for reproducibility.
 
 ## Required Libraries
 

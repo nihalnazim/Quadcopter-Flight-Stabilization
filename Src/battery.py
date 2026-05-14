@@ -1,5 +1,6 @@
-import numpy as np
-
+"""
+Simple battery voltage decay model for simulation support.
+"""
 
 class Battery:
     def __init__(self, initial_voltage=12.6, decay_rate=0.01):

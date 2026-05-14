@@ -1,3 +1,10 @@
+"""
+Safety checks for stabilization simulation.
+
+The safety system disables control output if roll or pitch
+angles exceed allowable limits.
+"""
+
 import math
 
 class SafetySystem:

@@ -17,7 +17,9 @@ def update_dynamics(theta, omega, u, dt, disturbance=0.0):
     # Compute angular acceleration
     omega_dot = (torque - damping * omega) / inertia
 
-    # Integrate state using Euler method
+    # Semi-implicit Euler integration:
+    # update angular velocity first, then update angle
+    # using the new angular velocity value.
     omega += omega_dot * dt
     theta += omega * dt
 

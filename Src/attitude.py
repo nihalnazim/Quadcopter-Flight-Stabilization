@@ -1,5 +1,14 @@
+"""
+Attitude estimation using accelerometer and gyroscope fusion.
+
+A complementary filter combines:
+- gyroscope integration for smooth short-term motion
+- accelerometer measurements for long-term stability
+"""
+
 import math
 from dataclasses import dataclass
+
 
 GYRO_SENSITIVITY = 65.5       # ±500 deg/s
 ACCEL_SENSITIVITY = 8192.0    # ±4 g
@@ -26,7 +35,16 @@ class AttitudeState:
         self.gyro_bias_z = bz
         self.calibrated = True
 
+    """
+    Update estimated orientation using IMU measurements.
+
+    Accelerometer measurements provide gravity-based orientation
+    estimates, while gyroscope measurements provide angular rate
+    integration. A complementary filter combines both sources.
+    """
+
     def update(
+            
         self,
         ax_raw: int,
         ay_raw: int,

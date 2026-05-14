@@ -1,5 +1,11 @@
-import numpy as np
+"""
+Simple IMU simulator for quadcopter stabilization testing.
 
+The simulator generates noisy accelerometer and gyroscope
+measurements from the true simulated system state.
+"""
+
+import numpy as np
 
 class IMUSimulator:
     def __init__(self, accel_noise=0.02, gyro_noise=0.5):
